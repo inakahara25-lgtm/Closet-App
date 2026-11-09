@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>My Closet</title>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#3d4bd6">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="My Closet">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="apple-touch-icon" href="icons/icon-180.png">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700&family=Figtree:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#eef0f6;--surface:#fff;--ink:#1b2140;--muted:#6a7092;--line:#d9dcea;--accent:#3d4bd6;--accent-ink:#fff;--sel:#e3e6ff;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#12142a;--surface:#1c2040;--ink:#eceefb;--muted:#9aa0c8;--line:#2d3260;--accent:#8f9bff;--accent-ink:#12142a;--sel:#2a3070}}
+:root[data-theme="dark"]{--bg:#12142a;--surface:#1c2040;--ink:#eceefb;--muted:#9aa0c8;--line:#2d3260;--accent:#8f9bff;--accent-ink:#12142a;--sel:#2a3070}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.45 Figtree,system-ui,sans-serif}
+h1,h2{font-family:'Bricolage Grotesque',Figtree,sans-serif;margin:0}
+main{max-width:960px;margin:0 auto;padding:20px 16px 96px}
+header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px}
+h1{font-size:2rem;letter-spacing:-.02em}
+.tabs{display:flex;gap:4px;background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:4px;width:max-content;margin-bottom:16px}
+.tabs button{border:0;background:none;color:var(--muted);font:600 .95rem Figtree,sans-serif;padding:8px 18px;border-radius:999px;cursor:pointer}
+.tabs button[aria-selected=true]{background:var(--accent);color:var(--accent-ink)}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.btn{border:0;background:var(--accent);color:var(--accent-ink);font:600 .95rem Figtree,sans-serif;padding:10px 18px;border-radius:12px;cursor:pointer}
+.btn.ghost{background:none;color:var(--ink);border:1px solid var(--line)}
+.btn.danger{background:none;color:#d23b4e;border:1px solid var(--line)}
+.chips{display:flex;gap:8px;overflow-x:auto;padding-bottom:8px;margin-bottom:12px}
+.chip{flex:none;border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:6px 14px;border-radius:999px;font:600 .875rem Figtree,sans-serif;cursor:pointer}
+.chip[aria-pressed=true]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
+.item{background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden;cursor:pointer;text-align:left;padding:0;color:inherit;font:inherit;position:relative}
+.item img{display:block;width:100%;aspect-ratio:3/4;object-fit:cover;background:var(--line)}
+.item .meta{padding:8px 10px}
+.item b{display:block;font-weight:600;font-size:.9rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.item small{color:var(--muted)}
+.item.sel{outline:3px solid var(--accent);background:var(--sel)}
+.item.sel::after{content:"✓";position:absolute;top:8px;right:8px;background:var(--accent);color:var(--accent-ink);width:24px;height:24px;border-radius:50%;display:grid;place-items:center;font-weight:700}
+.outfits{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px}
+.outfit{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:10px}
+.collage{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px}
+.collage img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:10px;background:var(--line)}
+.collage img:only-child{grid-column:1/-1;aspect-ratio:4/3}
+.outfit .row{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:0 4px 4px}
+.outfit h2{font-size:1.1rem}
+.empty{text-align:center;color:var(--muted);padding:48px 16px;border:1.5px dashed var(--line);border-radius:18px}
+dialog{border:0;border-radius:20px;background:var(--surface);color:var(--ink);padding:20px;width:min(480px,94vw);max-height:90vh}
+dialog::backdrop{background:rgba(10,12,30,.55)}
+dialog h2{font-size:1.3rem;margin-bottom:12px}
+label{display:block;font-weight:600;font-size:.875rem;margin:12px 0 4px}
+input[type=text],select{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--ink);font:inherit}
+.preview{width:100%;aspect-ratio:3/4;max-height:300px;object-fit:contain;background:var(--bg);border-radius:12px;display:none;margin-bottom:8px}
+.actions{display:flex;gap:8px;justify-content:flex-end;margin-top:16px;flex-wrap:wrap}
+.photo-btns{display:flex;gap:8px}
+.picker{max-height:50vh;overflow:auto;margin-top:8px}
+.note{color:var(--muted);font-size:.8rem;margin-top:24px}
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <h1>My Closet</h1>
+    <button class="btn" id="add">Add a piece</button>
+  </header>
+  <div class="tabs" role="tablist">
+    <button role="tab" id="t-closet" aria-selected="true">Closet</button>
+    <button role="tab" id="t-outfits" aria-selected="false">Outfits</button>
+  </div>
+  <div id="view"></div>
+  <p class="note" id="note"></p>
+</main>
+
+<dialog id="dAdd">
+  <h2>Add a piece</h2>
+  <img class="preview" id="prev" alt="Preview of the new piece">
+  <div class="photo-btns">
+    <button class="btn" id="cam" type="button">Take photo</button>
+    <button class="btn ghost" id="up" type="button">Choose photo</button>
+  </div>
+  <input type="file" accept="image/*" capture="environment" id="fCam" hidden>
+  <input type="file" accept="image/*" id="fUp" hidden>
+  <label for="name">Name</label>
+  <input type="text" id="name" placeholder="Navy linen shirt">
+  <label for="cat">Category</label>
+  <select id="cat"></select>
+  <div class="actions">
+    <button class="btn ghost" id="addCancel" type="button">Cancel</button>
+    <button class="btn" id="addSave" type="button">Save piece</button>
+  </div>
+</dialog>
+
+<dialog id="dItem">
+  <h2 id="iName"></h2>
+  <img class="preview" id="iImg" alt="" style="display:block">
+  <p id="iCat" style="color:var(--muted);margin:0"></p>
+  <div class="actions">
+    <button class="btn danger" id="iDel" type="button">Delete piece</button>
+    <button class="btn ghost" id="iClose" type="button">Close</button>
+  </div>
+</dialog>
+
+<dialog id="dOut">
+  <h2>Build an outfit</h2>
+  <label for="oName">Outfit name</label>
+  <input type="text" id="oName" placeholder="Friday dinner">
+  <label>Pick pieces</label>
+  <div class="picker"><div class="grid" id="pick"></div></div>
+  <div class="actions">
+    <button class="btn ghost" id="oCancel" type="button">Cancel</button>
+    <button class="btn" id="oSave" type="button">Save outfit</button>
+  </div>
+</dialog>
+
+<script>
+const CATS=['Tops','Bottoms','Dresses','Outerwear','Shoes','Accessories'];
+let S={items:[],outfits:[]},tab='closet',filter='All',pending=null,picked=new Set(),persisted=true;
+const $=id=>document.getElementById(id);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+
+/* storage: IndexedDB, falls back to memory */
+function db(){return new Promise((res,rej)=>{try{const r=indexedDB.open('closet',1);r.onupgradeneeded=()=>r.result.createObjectStore('kv');r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)}catch(e){rej(e)}})}
+async function load(){try{const d=await db();return await new Promise((res,rej)=>{const q=d.transaction('kv').objectStore('kv').get('state');q.onsuccess=()=>res(q.result);q.onerror=()=>rej(q.error)})}catch(e){persisted=false;return null}}
+async function save(){try{const d=await db();await new Promise((res,rej)=>{const t=d.transaction('kv','readwrite');t.objectStore('kv').put(S,'state');t.oncomplete=res;t.onerror=()=>rej(t.error)})}catch(e){persisted=false;render()}}
+
+/* resize photo to keep storage small */
+function shrink(file){return new Promise((res,rej)=>{const img=new Image(),u=URL.createObjectURL(file);img.onload=()=>{const m=700,k=Math.min(1,m/Math.max(img.width,img.height));const c=document.createElement('canvas');c.width=Math.round(img.width*k);c.height=Math.round(img.height*k);c.getContext('2d').drawImage(img,0,0,c.width,c.height);URL.revokeObjectURL(u);res(c.toDataURL('image/jpeg',.82))};img.onerror=()=>rej(new Error('bad image'));img.src=u})}
+
+function render(){
+  $('t-closet').setAttribute('aria-selected',tab==='closet');
+  $('t-outfits').setAttribute('aria-selected',tab==='outfits');
+  $('add').textContent=tab==='closet'?'Add a piece':'New outfit';
+  $('note').textContent=persisted?'':'Storage is unavailable here, so your closet will be lost when you close this page.';
+  const v=$('view');
+  if(tab==='closet'){
+    const list=filter==='All'?S.items:S.items.filter(i=>i.cat===filter);
+    const chips=['All',...CATS].map(c=>`<button class="chip" data-f="${c}" aria-pressed="${c===filter}">${c}</button>`).join('');
+    v.innerHTML=`<div class="chips">${chips}</div>`+(list.length?`<div class="grid">${list.map(itemCard).join('')}</div>`:`<div class="empty">${S.items.length?'Nothing in this category yet.':'Your closet is empty. Add a piece to start with a photo.'}</div>`);
+  }else{
+    v.innerHTML=S.outfits.length?`<div class="outfits">${S.outfits.map(outfitCard).join('')}</div>`:`<div class="empty">${S.items.length?'No outfits yet. Build one from your pieces.':'Add a few pieces first, then combine them into outfits.'}</div>`;
+  }
+}
+const itemCard=i=>`<button class="item" data-id="${i.id}"><img src="${i.img}" alt="${esc(i.name)}"><div class="meta"><b>${esc(i.name)}</b><small>${i.cat}</small></div></button>`;
+function outfitCard(o){
+  const imgs=o.items.map(id=>S.items.find(i=>i.id===id)).filter(Boolean).slice(0,6).map(i=>`<img src="${i.img}" alt="${esc(i.name)}">`).join('');
+  return `<div class="outfit"><div class="collage">${imgs}</div><div class="row"><h2>${esc(o.name)}</h2><button class="btn danger" data-del-outfit="${o.id}">Delete</button></div></div>`;
+}
+
+/* events */
+$('t-closet').onclick=()=>{tab='closet';render()};
+$('t-outfits').onclick=()=>{tab='outfits';render()};
+$('view').addEventListener('click',e=>{
+  const f=e.target.closest('[data-f]');if(f){filter=f.dataset.f;render();return}
+  const it=e.target.closest('.item');if(it){openItem(it.dataset.id);return}
+  const d=e.target.closest('[data-del-outfit]');if(d&&confirm('Delete this outfit?')){S.outfits=S.outfits.filter(o=>o.id!==d.dataset.delOutfit);save();render()}
+});
+$('add').onclick=()=>tab==='closet'?openAdd():openOutfit();
+
+/* add piece */
+$('cat').innerHTML=CATS.map(c=>`<option>${c}</option>`).join('');
+function openAdd(){pending=null;$('name').value='';$('prev').style.display='none';$('dAdd').showModal()}
+$('cam').onclick=()=>$('fCam').click();
+$('up').onclick=()=>$('fUp').click();
+async function onFile(e){const f=e.target.files[0];e.target.value='';if(!f)return;try{pending=await shrink(f);$('prev').src=pending;$('prev').style.display='block'}catch(x){alert('That file could not be read as an image. Try another photo.')}}
+$('fCam').onchange=onFile;$('fUp').onchange=onFile;
+$('addCancel').onclick=()=>$('dAdd').close();
+$('addSave').onclick=()=>{
+  if(!pending){alert('Add a photo first.');return}
+  S.items.unshift({id:uid(),name:$('name').value.trim()||'Untitled piece',cat:$('cat').value,img:pending});
+  save();$('dAdd').close();filter='All';render();
+};
+
+/* item detail */
+let openId=null;
+function openItem(id){const i=S.items.find(x=>x.id===id);if(!i)return;openId=id;$('iName').textContent=i.name;$('iImg').src=i.img;$('iImg').alt=i.name;$('iCat').textContent=i.cat;$('dItem').showModal()}
+$('iClose').onclick=()=>$('dItem').close();
+$('iDel').onclick=()=>{if(!confirm('Delete this piece? It will also be removed from outfits.'))return;S.items=S.items.filter(i=>i.id!==openId);S.outfits.forEach(o=>o.items=o.items.filter(x=>x!==openId));S.outfits=S.outfits.filter(o=>o.items.length);save();$('dItem').close();render()};
+
+/* outfit builder */
+function openOutfit(){
+  if(!S.items.length){alert('Add a few pieces to your closet first.');return}
+  picked=new Set();$('oName').value='';drawPick();$('dOut').showModal();
+}
+function drawPick(){$('pick').innerHTML=S.items.map(i=>`<button class="item${picked.has(i.id)?' sel':''}" data-p="${i.id}"><img src="${i.img}" alt="${esc(i.name)}"><div class="meta"><b>${esc(i.name)}</b><small>${i.cat}</small></div></button>`).join('')}
+$('pick').addEventListener('click',e=>{const b=e.target.closest('[data-p]');if(!b)return;const id=b.dataset.p;picked.has(id)?picked.delete(id):picked.add(id);drawPick()});
+$('oCancel').onclick=()=>$('dOut').close();
+$('oSave').onclick=()=>{
+  if(picked.size<2){alert('Pick at least two pieces.');return}
+  S.outfits.unshift({id:uid(),name:$('oName').value.trim()||'Untitled outfit',items:[...picked]});
+  save();$('dOut').close();tab='outfits';render();
+};
+
+if('serviceWorker' in navigator){addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}))}
+try{navigator.storage&&navigator.storage.persist&&navigator.storage.persist()}catch(e){}
+load().then(d=>{if(d&&d.items)S=d;render()});
+</script>
+</body>
+</html>
